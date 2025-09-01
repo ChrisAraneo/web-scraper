@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "outDir": "dist",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "target": "es6"
+  },
+  "include": ["src/**/*.ts"],
+  "lib": ["es2015"]
+}
