@@ -24,6 +24,12 @@
     "stryker": "npx stryker run",
     "test": "jest"
   },
+  "dependencies": {
+    "@types/axios": "^0.9.36",
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.1",
+    "jssoup": "^0.0.15"
+  },
   "devDependencies": {
     "@chris.araneo/eslint-config": "^0.0.65",
     "@chris.araneo/sort-patterns-file": "^0.0.9",
@@ -44,11 +50,5 @@
     "ts-jest": "^29.4.1",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.41.0"
-  },
-  "dependencies": {
-    "@types/axios": "^0.9.36",
-    "axios": "^1.11.0",
-    "dotenv": "^17.2.1",
-    "jssoup": "^0.0.15"
   }
 }
