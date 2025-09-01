@@ -46,6 +46,7 @@
     "typescript-eslint": "^8.41.0"
   },
   "dependencies": {
+    "dotenv": "^17.2.1",
     "jssoup": "^0.0.15"
   }
 }
