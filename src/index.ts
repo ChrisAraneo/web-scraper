@@ -1,6 +1,9 @@
 import { config } from 'dotenv';
-import axios from 'axios';
-import JSSoup from 'jssoup';
+import * as path from 'path';
+import { fetchListPage } from './fetch-list-page';
+import { fetchDetailsPage } from './fetch-details-page';
+import { writeFile } from './write-file';
+import { createDirWhenMissing } from './create-dir-when-missing';
 
 config();
 
@@ -19,55 +22,69 @@ if (!process.env.REGION) {
   process.exit(1);
 }
 
+if (!process.env.OUTPUT_DIR) {
+  console.error('OUTPUT_DIR is not defined');
+  process.exit(1);
+}
+
+if (!process.env.SAVE_INTERVAL) {
+  console.error('SAVE_INTERVAL is not defined');
+  process.exit(1);
+}
+
+const first = 0;
+const last = 1;
+
+const LIST_URL = process.env.LIST_URL!;
+const DETAILS_URL = process.env.DETAILS_URL!;
+const REGION = process.env.REGION!;
+const OUTPUT_DIR = process.env.OUTPUT_DIR!;
+const SAVE_INTERVAL = parseInt(process.env.SAVE_INTERVAL!);
+
 const result: any[] = [];
-const total = 1;
+
+createDirWhenMissing(OUTPUT_DIR);
 
 async function main() {
-  for (let i = 0; i < total; i++) {
-    const url: string = `${process.env.LIST_URL}?region=${process.env.REGION}&page=${i}`;
+  let fileCounter = 1;
+  let currentBatch: any[] = [];
+
+  for (let i = first; i < last; i++) {
+    const url: string = `${LIST_URL}?region=${REGION}&page=${i}`;
     const list = await fetchListPage(url);
     const details = list.map((id) => {
-      return fetchDetailsPage(`${process.env.DETAILS_URL}/${process.env.REGION}/${id}/champions`);
+      return fetchDetailsPage(`${DETAILS_URL}/${REGION}/${id}/champions`);
     });
 
-    Promise.all(details).then((values) => {
-      values.forEach((detail) => {
-        result.push(detail);
-      });
+    const values = await Promise.all(details);
+    values.forEach((detail) => {
+      result.push(detail);
+      currentBatch.push(detail);
     });
 
-    console.log(`Scrapped ${i} of ${total}`);
-  }
-}
+    console.log(`⏳ Scrapped ${i + 1} of ${last} pages...`);
 
-async function fetchListPage(url: string): Promise<string[]> {
-  let ids: string[] = [];
+    if ((i + 1) % SAVE_INTERVAL === 0 || i === last - 1) {
+      if (currentBatch.length > 0) {
+        const saveSuccess = await writeFile(
+          currentBatch,
+          path.join(OUTPUT_DIR, `results_${REGION}_${fileCounter}.json`),
+        );
 
-  try {
-    const response = await axios.get(url);
-    const soup = new JSSoup(response.data);
-    const rows = soup.findAll('tr');
-    ids = rows.map((row) => row.attrs?.id).filter(Boolean);
-  } catch (error) {
-    console.error('Error scraping website:', url);
-  }
-
-  return ids;
-}
-
-async function fetchDetailsPage(url: string): Promise<string[]> {
-  let result: string[] = [];
-
-  try {
-    const response = await axios.get(url);
-    const soup = new JSSoup(response.data);
-    const items = soup.findAll('tr');
-    result = items.filter((item) => item.attrs?.class === 'cursor-pointer').map((item) => item.getText('|')).filter(Boolean);
-  } catch (error) {
-    console.error('Error scraping website:', url);
+        if (saveSuccess) {
+          fileCounter++;
+          currentBatch = [];
+          result.length = 0;
+          console.log(`🧹 Cleared result array to free memory`);
+        }
+      }
+    }
   }
 
-  return result;
+  console.log(`🎉 Scraping completed!`);
+  console.log(
+    `📁 Results saved in ${fileCounter - 1} file(s) in the '${OUTPUT_DIR}' directory`,
+  );
 }
 
 main();
