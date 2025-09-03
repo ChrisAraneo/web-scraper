@@ -1,4 +1,5 @@
 import JSSoup from 'jssoup';
+import axios from 'axios';
 
 export async function fetchDetailsPage(url: string): Promise<string[]> {
   let result: string[] = [];

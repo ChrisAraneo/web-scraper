@@ -1,4 +1,5 @@
 import JSSoup from 'jssoup';
+import axios from 'axios';
 
 export async function fetchListPage(url: string): Promise<string[]> {
   let ids: string[] = [];
@@ -9,7 +10,7 @@ export async function fetchListPage(url: string): Promise<string[]> {
     const rows = soup.findAll('tr');
     ids = rows.map((row) => row.attrs?.id).filter(Boolean);
   } catch (error) {
-    console.error('Error scraping website:', url);
+    console.error('Error scraping website:', url, error);
   }
 
   return ids;
