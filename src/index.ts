@@ -4,36 +4,37 @@ import { fetchListPage } from './fetch-list-page';
 import { fetchDetailsPage } from './fetch-details-page';
 import { writeFile } from './write-file';
 import { createDirWhenMissing } from './create-dir-when-missing';
+import { logger } from './logger';
 
 config();
 
 if (!process.env.LIST_URL) {
-  console.error('LIST_URL is not defined');
+  logger.error('LIST_URL is not defined');
   process.exit(1);
 }
 
 if (!process.env.DETAILS_URL) {
-  console.error('DETAILS_URL is not defined');
+  logger.error('DETAILS_URL is not defined');
   process.exit(1);
 }
 
 if (!process.env.REGION) {
-  console.error('REGION is not defined');
+  logger.error('REGION is not defined');
   process.exit(1);
 }
 
 if (!process.env.OUTPUT_DIR) {
-  console.error('OUTPUT_DIR is not defined');
+  logger.error('OUTPUT_DIR is not defined');
   process.exit(1);
 }
 
 if (!process.env.SAVE_INTERVAL) {
-  console.error('SAVE_INTERVAL is not defined');
+  logger.error('SAVE_INTERVAL is not defined');
   process.exit(1);
 }
 
 const first = 0;
-const last = 1;
+const last = 14150;
 
 const LIST_URL = process.env.LIST_URL!;
 const DETAILS_URL = process.env.DETAILS_URL!;
@@ -62,7 +63,7 @@ async function main() {
       currentBatch.push(detail);
     });
 
-    console.log(`⏳ Scrapped ${i + 1} of ${last} pages...`);
+    logger.info(`⏳ Scrapped ${i + 1} of ${last} pages...`);
 
     if ((i + 1) % SAVE_INTERVAL === 0 || i === last - 1) {
       if (currentBatch.length > 0) {
@@ -75,14 +76,14 @@ async function main() {
           fileCounter++;
           currentBatch = [];
           result.length = 0;
-          console.log(`🧹 Cleared result array to free memory`);
+          logger.info(`🧹 Cleared result array to free memory`);
         }
       }
     }
   }
 
-  console.log(`🎉 Scraping completed!`);
-  console.log(
+  logger.info(`🎉 Scraping completed!`);
+  logger.info(
     `📁 Results saved in ${fileCounter - 1} file(s) in the '${OUTPUT_DIR}' directory`,
   );
 }
