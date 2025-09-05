@@ -2,8 +2,9 @@ import JSSoup from 'jssoup';
 import axios from 'axios';
 import { sleepRandomTime } from './sleep-random-time';
 import { sleep } from './sleep';
+import { logger } from './logger';
 
-const FIVE_MINUTES_MS = 1000 * 60 * 5;
+const TEN_MINUTES_MS = 1000 * 60 * 10;
 
 export async function fetchDetailsPage(url: string): Promise<string[]> {
   let result: string[] = [];
@@ -17,9 +18,11 @@ export async function fetchDetailsPage(url: string): Promise<string[]> {
     result = items
       .filter((item) => item.attrs?.class === 'cursor-pointer')
       .map((item) => item.getText('|'))
-      .filter(Boolean);
+      .filter(Boolean)
+      .map((text) => `${url}|${text}`);
   } catch (error) {
-    await sleep(FIVE_MINUTES_MS);
+    logger.error(`Error fetching details page ${url}. Retrying...`);
+    await sleep(TEN_MINUTES_MS);
 
     return fetchDetailsPage(url);
   }
