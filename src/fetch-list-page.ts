@@ -1,10 +1,13 @@
 import JSSoup from 'jssoup';
 import axios from 'axios';
+import { sleepRandomTime } from './sleep-random-time';
 
 export async function fetchListPage(url: string): Promise<string[]> {
   let ids: string[] = [];
 
   try {
+    await sleepRandomTime();
+
     const response = await axios.get(url);
     const soup = new JSSoup(response.data);
     const rows = soup.findAll('tr');
