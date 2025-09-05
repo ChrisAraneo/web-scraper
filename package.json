@@ -25,6 +25,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@chris.araneo/logger": "^0.0.2",
     "@types/axios": "^0.9.36",
     "axios": "^1.11.0",
     "dotenv": "^17.2.1",
