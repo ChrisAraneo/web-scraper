@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import { logger } from './logger';
 
 export async function writeFile(
   data: any[],
@@ -8,10 +9,10 @@ export async function writeFile(
 
   try {
     fs.writeFileSync(filepath, content, 'utf8');
-    console.log(`✅ Saved ${data.length} results to ${filepath}`);
+    logger.info(`✅ Saved ${data.length} results to ${filepath}`);
     return true;
   } catch (error) {
-    console.error(`❌ Error saving file ${filepath}:`, error);
+    logger.error(`❌ Error saving file ${filepath}:`, error);
     return false;
   }
 }
