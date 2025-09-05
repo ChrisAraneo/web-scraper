@@ -1,6 +1,9 @@
 import JSSoup from 'jssoup';
 import axios from 'axios';
 import { sleepRandomTime } from './sleep-random-time';
+import { sleep } from './sleep';
+
+const FIVE_MINUTES_MS = 1000 * 60 * 5;
 
 export async function fetchListPage(url: string): Promise<string[]> {
   let ids: string[] = [];
@@ -13,7 +16,9 @@ export async function fetchListPage(url: string): Promise<string[]> {
     const rows = soup.findAll('tr');
     ids = rows.map((row) => row.attrs?.id).filter(Boolean);
   } catch (error) {
-    console.error('Error scraping website:', url, error);
+    await sleep(FIVE_MINUTES_MS);
+
+    return fetchListPage(url);
   }
 
   return ids;
