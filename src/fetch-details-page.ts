@@ -12,19 +12,21 @@ export async function fetchDetailsPage(url: string): Promise<string[]> {
   try {
     await sleepRandomTime();
 
-    const response = await axios.get(url);
+    const response = await axios.get(encodeURI(url));
     const soup = new JSSoup(response.data);
     const items = soup.findAll('tr');
-    result = items
-      .filter((item) => item.attrs?.class === 'cursor-pointer')
-      .map((item) => item.getText('|'))
+    result = items.map((item) => item.getText('|'))
       .filter(Boolean)
       .map((text) => `${url}|${text}`);
   } catch (error) {
-    logger.error(`Error fetching details page ${url}. Retrying...`);
-    await sleep(TEN_MINUTES_MS);
+    if (!error?.status || error?.status === 429 || error?.status / 100 === 5) {
+      logger.error(`Error fetching details page ${url}. Status: ${error?.status}. Retrying...`);
+      await sleep(TEN_MINUTES_MS);
 
-    return fetchDetailsPage(url);
+      return fetchDetailsPage(url);
+    }
+
+    logger.error(`Error fetching details page ${url}. Status: ${error?.status}`);
   }
 
   return result;
