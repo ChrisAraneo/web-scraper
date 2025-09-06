@@ -1,30 +1,50 @@
-import JSSoup from 'jssoup';
-import axios from 'axios';
-import { sleep } from './sleep';
 import { logger } from './logger';
+import { getWebsite } from './get-website';
+import {
+  catchError,
+  delay,
+  EMPTY,
+  finalize,
+  map,
+  Observable,
+  of,
+  tap,
+} from 'rxjs';
+import { runWhenElse } from './run-when-else';
+import { shouldRetry } from './should-retry';
 
 const TEN_MINUTES_MS = 1000 * 60 * 10;
 
-export async function fetchDetailsPage(url: string): Promise<string[]> {
-  let result: string[] = [];
-
-  try {
-    const response = await axios.get(encodeURI(url));
-    const soup = new JSSoup(response.data);
-    const items = soup.findAll('tr');
-    result = items.map((item) => item.getText('|'))
-      .filter(Boolean)
-      .map((text) => `${url}|${text}`);
-  } catch (error) {
-    if (!error?.status || error?.status === 429 || error?.status / 100 === 5) {
-      logger.error(`Error fetching details page ${url}. Status: ${error?.status}. Retrying...`);
-      await sleep(TEN_MINUTES_MS);
-
-      return fetchDetailsPage(url);
-    }
-
-    logger.error(`Error fetching details page ${url}. Status: ${error?.status}`);
-  }
-
-  return result;
+export function fetchDetailsPage(url: string): Observable<string[]> {
+  return getWebsite(url).pipe(
+    map((soup) => soup.findAll('tr')),
+    map((items) =>
+      items
+        .map((item) => item.getText('|'))
+        .filter(Boolean)
+        .map((text) => `${url}|${text}`),
+    ),
+    catchError((error) =>
+      runWhenElse(
+        shouldRetry(error),
+        () =>
+          fetchDetailsPage(url).pipe(
+            tap(() =>
+              logger.error(
+                `Error fetching details page ${url}. Status: ${error?.status}. Retrying...`,
+              ),
+            ),
+            delay(TEN_MINUTES_MS),
+          ),
+        () =>
+          of([]).pipe(
+            finalize(() =>
+              logger.error(
+                `Error fetching details page ${url}. Status: ${error?.status}`,
+              ),
+            ),
+          ),
+      ),
+    ),
+  );
 }

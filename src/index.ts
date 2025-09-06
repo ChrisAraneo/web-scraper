@@ -5,6 +5,7 @@ import { fetchDetailsPage } from './fetch-details-page';
 import { writeFile } from './write-file';
 import { createDirWhenMissing } from './create-dir-when-missing';
 import { logger } from './logger';
+import { forkJoin, mergeMap } from 'rxjs';
 
 config();
 
@@ -34,7 +35,7 @@ if (!process.env.SAVE_INTERVAL) {
 }
 
 const first = 0;
-const last = 14150;
+const last = 100;
 
 const LIST_URL = process.env.LIST_URL!;
 const DETAILS_URL = process.env.DETAILS_URL!;
@@ -52,34 +53,43 @@ async function main() {
 
   for (let i = first; i < last; i++) {
     const url: string = `${LIST_URL}?region=${REGION}&page=${i}`;
-    const list = await fetchListPage(url);
-    const details = list.map((id) => {
-      return fetchDetailsPage(`${DETAILS_URL}/${REGION}/${id}/champions`);
-    });
 
-    const values = await Promise.all(details);
-    values.forEach((detail) => {
-      result.push(detail);
-      currentBatch.push(detail);
-    });
+    fetchListPage(url)
+      .pipe(
+        mergeMap((ids) =>
+          forkJoin(
+            ids.map((id) =>
+              fetchDetailsPage(
+                `${DETAILS_URL}/${REGION}/${id}#championsData-all`,
+              ),
+            ),
+          ),
+        ),
+      )
+      .subscribe((values) => {
+        values.forEach((detail) => {
+          result.push(detail);
+          currentBatch.push(detail);
 
-    logger.info(`⏳ Scrapped ${i + 1} of ${last} pages...`);
+          logger.info(`⏳ Scrapped ${i + 1} of ${last} pages...`);
 
-    if ((i + 1) % SAVE_INTERVAL === 0 || i === last - 1) {
-      if (currentBatch.length > 0) {
-        const saveSuccess = await writeFile(
-          currentBatch,
-          path.join(OUTPUT_DIR, `results_${REGION}_${fileCounter}.json`),
-        );
-
-        if (saveSuccess) {
-          fileCounter++;
-          currentBatch = [];
-          result.length = 0;
-          logger.info(`🧹 Cleared result array to free memory`);
-        }
-      }
-    }
+          if ((i + 1) % SAVE_INTERVAL === 0 || i === last - 1) {
+            if (currentBatch.length > 0) {
+              writeFile(
+                currentBatch,
+                path.join(OUTPUT_DIR, `results_${REGION}_${fileCounter}.json`),
+              ).then((saveSuccess) => {
+                if (saveSuccess) {
+                  fileCounter++;
+                  currentBatch = [];
+                  result.length = 0;
+                  logger.info(`🧹 Cleared result array to free memory`);
+                }
+              });
+            }
+          }
+        });
+      });
   }
 
   logger.info(`🎉 Scraping completed!`);
