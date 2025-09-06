@@ -1,6 +1,5 @@
 import JSSoup from 'jssoup';
 import axios from 'axios';
-import { sleepRandomTime } from './sleep-random-time';
 import { sleep } from './sleep';
 import { logger } from './logger';
 
@@ -10,8 +9,6 @@ export async function fetchDetailsPage(url: string): Promise<string[]> {
   let result: string[] = [];
 
   try {
-    await sleepRandomTime();
-
     const response = await axios.get(encodeURI(url));
     const soup = new JSSoup(response.data);
     const items = soup.findAll('tr');
