@@ -29,7 +29,8 @@
     "@types/axios": "^0.9.36",
     "axios": "^1.11.0",
     "dotenv": "^17.2.1",
-    "jssoup": "^0.0.15"
+    "jssoup": "^0.0.15",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@chris.araneo/eslint-config": "^0.0.65",
