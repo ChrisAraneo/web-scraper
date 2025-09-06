@@ -12,7 +12,7 @@ export async function fetchListPage(url: string): Promise<string[]> {
   try {
     await sleepRandomTime();
 
-    const response = await axios.get(url);
+    const response = await axios.get(encodeURI(url));
     const soup = new JSSoup(response.data);
     const rows = soup.findAll('tr');
     ids = rows.map((row) => row.attrs?.id).filter(Boolean);
