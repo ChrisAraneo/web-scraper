@@ -5,7 +5,7 @@ import { fetchDetailsPage } from './fetch-details-page';
 import { writeFile } from './write-file';
 import { createDirWhenMissing } from './create-dir-when-missing';
 import { logger } from './logger';
-import { forkJoin, mergeMap } from 'rxjs';
+import { forkJoin, mergeMap, tap } from 'rxjs';
 
 config();
 
@@ -35,7 +35,7 @@ if (!process.env.SAVE_INTERVAL) {
 }
 
 const first = 0;
-const last = 100;
+const last = 3;
 
 const LIST_URL = process.env.LIST_URL!;
 const DETAILS_URL = process.env.DETAILS_URL!;
@@ -63,6 +63,8 @@ async function main() {
                 `${DETAILS_URL}/${REGION}/${id}#championsData-all`,
               ),
             ),
+          ).pipe(
+            tap(() => logger.info(`Scrapped page ${i + 1}`)),
           ),
         ),
       )
@@ -70,8 +72,6 @@ async function main() {
         values.forEach((detail) => {
           result.push(detail);
           currentBatch.push(detail);
-
-          logger.info(`⏳ Scrapped ${i + 1} of ${last} pages...`);
 
           if ((i + 1) % SAVE_INTERVAL === 0 || i === last - 1) {
             if (currentBatch.length > 0) {
@@ -83,7 +83,6 @@ async function main() {
                   fileCounter++;
                   currentBatch = [];
                   result.length = 0;
-                  logger.info(`🧹 Cleared result array to free memory`);
                 }
               });
             }
@@ -91,11 +90,6 @@ async function main() {
         });
       });
   }
-
-  logger.info(`🎉 Scraping completed!`);
-  logger.info(
-    `📁 Results saved in ${fileCounter - 1} file(s) in the '${OUTPUT_DIR}' directory`,
-  );
 }
 
 main();
