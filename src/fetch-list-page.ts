@@ -12,9 +12,9 @@ export function fetchListPage(url: string): Observable<string[]> {
         .map((tr) => tr.attrs?.id)
         .filter(Boolean),
     ),
-    catchError(() =>
+    catchError((error) =>
       fetchListPage(url).pipe(
-        tap(() => logger.error(`Error fetching list page ${url}. Retrying...`)),
+        tap(() => logger.error(`Error fetching list page ${url}. Status: ${error?.status}. Retrying...`)),
         delay(TEN_MINUTES_MS),
       ),
     ),
