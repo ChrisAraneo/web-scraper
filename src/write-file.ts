@@ -1,10 +1,7 @@
 import * as fs from 'fs';
 import { logger } from './logger';
 
-export async function writeFile(
-  data: any[],
-  filepath: string,
-): Promise<boolean> {
+export async function writeFile(data: any, filepath: string): Promise<boolean> {
   const content = data.map((item) => JSON.stringify(item)).join('\n');
 
   try {
