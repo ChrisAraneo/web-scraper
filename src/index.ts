@@ -30,8 +30,23 @@ if (!process.env.OUTPUT_DIR) {
   process.exit(1);
 }
 
-const first = 0;
-const last = 12;
+if (!process.env.OUTPUT_DIR) {
+  logger.error('OUTPUT_DIR is not defined');
+  process.exit(1);
+}
+
+if (!process.env.FIRST) {
+  logger.error('FIRST is not defined');
+  process.exit(1);
+}
+
+if (!process.env.LAST) {
+  logger.error('LAST is not defined');
+  process.exit(1);
+}
+
+const FIRST = parseInt(process.env.FIRST, 0);
+const LAST = parseInt(process.env.LAST, 99);
 
 const LIST_URL = process.env.LIST_URL!;
 const DETAILS_URL = process.env.DETAILS_URL!;
@@ -41,10 +56,10 @@ const OUTPUT_DIR = process.env.OUTPUT_DIR!;
 createDirWhenMissing(OUTPUT_DIR);
 
 async function main() {
-  const zeros = Array(last - first).fill(0);
+  const zeros = Array(LAST - FIRST + 1).fill(0);
 
   const observables = zeros.map((_, index) => {
-    const url: string = `${LIST_URL}?region=${REGION}&page=${index + first}`;
+    const url: string = `${LIST_URL}?region=${REGION}&page=${index + FIRST}`;
 
     return fetchListPage(url).pipe(
       mergeMap((ids) =>
@@ -56,7 +71,7 @@ async function main() {
           ),
         ),
       ),
-      tap(() => logger.info(`Scrapped whole list ${index + first}`)),
+      tap(() => logger.info(`Scrapped whole list ${index + FIRST}`)),
     );
   });
 
