@@ -1,24 +1,20 @@
 import { logger } from './logger';
 import { getWebsite } from './get-website';
-import {
-  catchError,
-  delay,
-  EMPTY,
-  map,
-  Observable,
-} from 'rxjs';
+import { catchError, delay, EMPTY, map, Observable } from 'rxjs';
 import { shouldRetry } from './should-retry';
 import { get } from 'lodash';
 
 const TEN_MINUTES_MS = 1000 * 60 * 10;
 
 export function fetchDetailsPage(url: string): Observable<string[]> {
-  const logError = (error: unknown) => logger.error(
-    `Error fetching details page ${url}. Status: ${get(error, 'status', 'unknown')}`,
-  );
-  const logErrorRetry = (error: unknown) => logger.error(
-    `Error fetching list page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
-  );
+  const logError = (error: unknown) =>
+    logger.error(
+      `Error fetching details page ${url}. Status: ${get(error, 'status', 'unknown')}`,
+    );
+  const logErrorRetry = (error: unknown) =>
+    logger.error(
+      `Error fetching list page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
+    );
   const delayTenMinutes = delay(TEN_MINUTES_MS);
 
   return getWebsite(url).pipe(
@@ -33,14 +29,12 @@ export function fetchDetailsPage(url: string): Observable<string[]> {
       if (shouldRetry(error)) {
         logErrorRetry(error);
 
-        return fetchDetailsPage(url).pipe(
-          delayTenMinutes,
-        );
+        return fetchDetailsPage(url).pipe(delayTenMinutes);
       } else {
         logError(error);
 
         return EMPTY;
       }
-    })
+    }),
   );
 }
