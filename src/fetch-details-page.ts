@@ -1,7 +1,7 @@
-import { logger } from './logger';
+import { logger } from './utils/logger';
 import { getWebsite } from './get-website';
 import { catchError, delay, EMPTY, map, Observable } from 'rxjs';
-import { shouldRetry } from './should-retry';
+import { shouldRetry } from './utils/should-retry';
 import { get } from 'lodash';
 
 const TEN_MINUTES_MS = 1000 * 60 * 10;

@@ -2,11 +2,11 @@ import { config } from 'dotenv';
 import * as path from 'path';
 import { fetchListPage } from './fetch-list-page';
 import { fetchDetailsPage } from './fetch-details-page';
-import { createDirWhenMissing } from './create-dir-when-missing';
-import { logger } from './logger';
+import { createDirWhenMissing } from './utils/create-dir-when-missing';
+import { logger } from './utils/logger';
 import { forkJoin, mergeMap, tap } from 'rxjs';
 import { chunk } from 'lodash';
-import { writeFile } from './write-file';
+import { writeFile } from './utils/write-file';
 
 config();
 

@@ -1,4 +1,4 @@
-import { logger } from './logger';
+import { logger } from './utils/logger';
 import { getWebsite } from './get-website';
 import { catchError, delay, map, Observable, tap } from 'rxjs';
 import { get } from 'lodash';
