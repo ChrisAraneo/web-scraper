@@ -1,6 +1,6 @@
 {
   "name": "web-scraper",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "keywords": [],
   "homepage": "https://github.com/ChrisAraneo/web-scraper#readme",
@@ -24,6 +24,15 @@
     "stryker": "npx stryker run",
     "test": "jest"
   },
+  "dependencies": {
+    "@chris.araneo/logger": "^0.0.2",
+    "@types/axios": "^0.9.36",
+    "axios": "^1.11.0",
+    "dotenv": "^17.2.1",
+    "jssoup": "^0.0.15",
+    "lodash": "^4.17.21",
+    "rxjs": "^7.8.2"
+  },
   "devDependencies": {
     "@chris.araneo/eslint-config": "^0.0.65",
     "@chris.araneo/sort-patterns-file": "^0.0.9",
@@ -31,6 +40,7 @@
     "@stryker-mutator/typescript-checker": "^9.1.1",
     "@swc/core": "^1.13.5",
     "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^8.41.0",
     "@typescript-eslint/parser": "^8.41.0",
