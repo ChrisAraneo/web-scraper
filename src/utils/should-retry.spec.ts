@@ -62,6 +62,16 @@ describe('shouldRetry', () => {
     });
   });
 
+  describe('when status is a large number', () => {
+    it('should return false for status 600', () => {
+      expect(shouldRetry({ status: 600 })).toBe(false);
+    });
+
+    it('should return false for status 1000', () => {
+      expect(shouldRetry({ status: 1000 })).toBe(false);
+    });
+  });
+
   describe('when status indicates success or client error', () => {
     it('should return false for status 200 (OK)', () => {
       expect(shouldRetry({ status: 200 })).toBe(false);
