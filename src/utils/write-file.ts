@@ -1,11 +1,9 @@
 import * as fs from 'fs';
 import { logger } from './logger';
 
-export async function writeFile(data: any, filepath: string): Promise<boolean> {
-  const content = data.map((item) => JSON.stringify(item)).join('\n');
-
+export async function writeFile<T>(data: T, filepath: string): Promise<boolean> {
   try {
-    fs.writeFileSync(filepath, content, 'utf8');
+    fs.writeFileSync(filepath, JSON.stringify(data), 'utf8');
     return true;
   } catch (error) {
     logger.error(`Error saving file ${filepath}:`, error);
