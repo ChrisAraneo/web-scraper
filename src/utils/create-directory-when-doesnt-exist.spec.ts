@@ -70,6 +70,21 @@ describe('createDirectoryWhenDoesntExist', () => {
         expect.any(Object),
       );
     });
+
+    it('should create directory with recursive option set to true', () => {
+      const directoryPath = '/path/to/new/directory';
+      const expectedOptions = { recursive: true } as const;
+      MOCKED_FS.existsSync.mockReturnValue(false);
+      MOCKED_FS.mkdirSync.mockReturnValue('');
+
+      createDirectoryWhenDoesntExist(directoryPath);
+
+      expect(MOCKED_FS.existsSync).toHaveBeenCalledWith(directoryPath);
+      expect(MOCKED_FS.mkdirSync).toHaveBeenCalledWith(
+        directoryPath,
+        expectedOptions,
+      );
+    });
   });
 
   describe('when directory already exists', () => {
