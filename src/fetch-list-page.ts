@@ -2,8 +2,7 @@ import { logger } from './utils/logger';
 import { getWebsite } from './get-website';
 import { catchError, delay, map, Observable, tap } from 'rxjs';
 import { get } from 'lodash';
-
-const TEN_MINUTES_MS = 1000 * 60 * 10;
+import { TEN_MINUTES_MS } from './utils/consts';
 
 export function fetchListPage(url: string): Observable<string[]> {
   const logError = (error: unknown) =>
