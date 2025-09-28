@@ -32,7 +32,7 @@ cp .env.example .env
 
 Edit the `.env` file with your configuration:
 ```env
-LIST_URL=https://example.com/
+LEADERBOARDS_URL=https://example.com/
 DETAILS_URL=https://example.com/details
 FIRST=1
 LAST=99
@@ -111,7 +111,7 @@ The scraper is configured through environment variables:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `LIST_URL` | Base URL for list pages | `https://example.com/` |
+| `LEADERBOARDS_URL` | Base URL for list pages | `https://example.com/` |
 | `DETAILS_URL` | Base URL for detail pages | `https://example.com/details` |
 | `FIRST` | First page number to scrape | `1` |
 | `LAST` | Last page number to scrape | `99` |

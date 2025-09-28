@@ -11,7 +11,7 @@ import { getEnvOrExitProcess } from './utils/get-env-or-exit-process';
 
 config();
 
-const LIST_URL = getEnvOrExitProcess('LIST_URL');
+const LEADERBOARDS_URL = getEnvOrExitProcess('LEADERBOARDS_URL');
 const DETAILS_URL = getEnvOrExitProcess('DETAILS_URL');
 const REGION = getEnvOrExitProcess('REGION');
 const OUTPUT_DIR = getEnvOrExitProcess('OUTPUT_DIR');
@@ -24,7 +24,7 @@ async function main() {
   const zeros = Array(LAST - FIRST + 1).fill(0);
 
   const observables = zeros.map((_, index) => {
-    const url: string = `${LIST_URL}?region=${REGION}&page=${index + FIRST}`;
+    const url: string = `${LEADERBOARDS_URL}?region=${REGION}&page=${index + FIRST}`;
 
     return fetchListPage(url).pipe(
       mergeMap((ids) =>
