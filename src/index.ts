@@ -13,6 +13,7 @@ config();
 
 const LEADERBOARDS_URL = getEnvOrExitProcess('LEADERBOARDS_URL');
 const DETAILS_URL = getEnvOrExitProcess('DETAILS_URL');
+const BEST_PLAYERS_URL = getEnvOrExitProcess('BEST_PLAYERS_URL');
 const REGION = getEnvOrExitProcess('REGION');
 const OUTPUT_DIR = getEnvOrExitProcess('OUTPUT_DIR');
 const FIRST = parseInt(getEnvOrExitProcess('FIRST'), 0);
