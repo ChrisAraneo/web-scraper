@@ -4,7 +4,7 @@ import { catchError, delay, map, Observable, tap } from 'rxjs';
 import { get } from 'lodash';
 import { TEN_MINUTES_MS } from './utils/consts';
 
-export function fetchListPage(url: string): Observable<string[]> {
+export function fetchLeaderboardsPage(url: string): Observable<string[]> {
   const logError = (error: unknown) =>
     tap(() =>
       logger.error(
@@ -23,7 +23,7 @@ export function fetchListPage(url: string): Observable<string[]> {
     catchError((error) => {
       logError(error);
 
-      return fetchListPage(url).pipe(delayTenMinutes);
+      return fetchLeaderboardsPage(url).pipe(delayTenMinutes);
     }),
   );
 }

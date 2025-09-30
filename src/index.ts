@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 import * as path from 'path';
-import { fetchListPage } from './fetch-list-page';
+import { fetchLeaderboardsPage } from './fetch-leaderboards-page';
 import { fetchDetailsPage } from './fetch-details-page';
 import { createDirectoryWhenDoesntExist } from './utils/create-directory-when-doesnt-exist';
 import { logger } from './utils/logger';
@@ -27,7 +27,7 @@ async function main() {
   const observables = zeros.map((_, index) => {
     const url: string = `${LEADERBOARDS_URL}?region=${REGION}&page=${index + FIRST}`;
 
-    return fetchListPage(url).pipe(
+    return fetchLeaderboardsPage(url).pipe(
       mergeMap((ids) =>
         forkJoin(
           ids.map((id) =>
