@@ -8,7 +8,7 @@ export function fetchLeaderboardsPage(url: string): Observable<string[]> {
   const logError = (error: unknown) =>
     tap(() =>
       logger.error(
-        `Error fetching list page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
+        `Error fetching leaderboards page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
       ),
     );
   const delayTenMinutes = delay(TEN_MINUTES_MS);
