@@ -12,7 +12,7 @@ export function fetchDetailsPage(url: string): Observable<string[]> {
     );
   const logErrorRetry = (error: unknown) =>
     logger.error(
-      `Error fetching list page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
+      `Error fetching details page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
     );
   const delayTenMinutes = delay(TEN_MINUTES_MS);
 
