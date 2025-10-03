@@ -5,8 +5,6 @@ import { get } from 'lodash';
 import { TEN_MINUTES_MS } from './utils/consts';
 
 export function fetchBestPlayersPage(url: string): Observable<string[]> {
-  console.log('Fetching best players from URL:', url);
-
   const logError = (error: unknown) =>
     tap(() =>
       logger.error(
