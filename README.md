@@ -148,8 +148,8 @@ The scraper is configured through environment variables defined in the `.env` fi
 | `DETAILS_URL` | Base URL for player detail pages | `https://example.com/details` | Yes |
 | `BEST_PLAYERS_URL` | Base URL for best players pages | `https://example.com/best-players` | Yes |
 | `CHARACTER` | Character name to search for | `example-character` | Yes |
-| `REGION` | Region parameter for requests | `eune`, `euw`, `na` | Yes |
-| `OUTPUT_DIR` | Directory to save results | `scraped_data` | Yes |
+| `REGION` | Region parameter for requests | `na` | Yes |
+| `OUTPUT_DIR` | Directory to save results | `output` | Yes |
 | `FIRST` | First page number to scrape (0-based) | `0` | Yes |
 | `LAST` | Last page number to scrape (inclusive) | `10` | Yes |
 
