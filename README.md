@@ -5,7 +5,7 @@
   <br>
   <a href="https://github.com/ChrisAraneo/web-scraper/blob/master/package.json"><img src="https://img.shields.io/badge/version-v0.1.1-blue" alt="version"></a>
   <a href="https://github.com/ChrisAraneo/web-scraper/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Web Scraper is released under the MIT license."></a>
-  <a href="https://github.com/ChrisAraneo/web-scraper/actions/workflows/node.js.yml"><img alt="GitHub CI Status" src="https://img.shields.io/github/actions/workflow/status/ChrisAraneo/web-scraper/node.js.yml?label=CI&logo=GitHub"></a>
+  <a href="https://github.com/ChrisAraneo/web-scraper/actions/workflows/ci.yml"><img alt="GitHub CI Status" src="https://img.shields.io/github/actions/workflow/status/ChrisAraneo/web-scraper/ci.yml?label=CI&logo=GitHub"></a>
   <br>
   <br>
   <em>Simple configurable TypeScript web scraping tool</em>
