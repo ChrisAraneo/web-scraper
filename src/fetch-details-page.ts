@@ -3,8 +3,7 @@ import { getWebsite } from './get-website';
 import { catchError, delay, EMPTY, map, Observable } from 'rxjs';
 import { shouldRetry } from './utils/should-retry';
 import { get } from 'lodash';
-
-const TEN_MINUTES_MS = 1000 * 60 * 10;
+import { TEN_MINUTES_MS } from './utils/consts';
 
 export function fetchDetailsPage(url: string): Observable<string[]> {
   const logError = (error: unknown) =>
@@ -13,7 +12,7 @@ export function fetchDetailsPage(url: string): Observable<string[]> {
     );
   const logErrorRetry = (error: unknown) =>
     logger.error(
-      `Error fetching list page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
+      `Error fetching details page ${url}. Status: ${get(error, 'status', 'unknown')}. Retrying...`,
     );
   const delayTenMinutes = delay(TEN_MINUTES_MS);
 
